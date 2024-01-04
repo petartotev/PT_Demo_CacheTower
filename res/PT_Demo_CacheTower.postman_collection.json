@@ -1,0 +1,103 @@
+{
+	"info": {
+		"_postman_id": "bf56ac92-9406-4a84-976c-97cd7717bf3a",
+		"name": "PT_Demo_CacheTower",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23140527"
+	},
+	"item": [
+		{
+			"name": "MemoryCache",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url-http-app}}/CacheTower/MemoryCache/333",
+					"host": [
+						"{{url-http-app}}"
+					],
+					"path": [
+						"CacheTower",
+						"MemoryCache",
+						"333"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "200 OK",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url-http-app}}/CacheTower/MemoryCache/123",
+							"host": [
+								"{{url-http-app}}"
+							],
+							"path": [
+								"CacheTower",
+								"MemoryCache",
+								"123"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 04 Jan 2024 20:37:32 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"userId\": 123,\n    \"userName\": \"username-123\",\n    \"dateCreatedOrUpdated\": \"2024-01-04T22:37:32.7546807+02:00\"\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url-https-app",
+			"value": "https://localhost:7191",
+			"type": "string"
+		},
+		{
+			"key": "url-http-app",
+			"value": "http://localhost:5001",
+			"type": "string"
+		}
+	]
+}

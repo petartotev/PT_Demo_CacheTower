@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34221.43
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoCacheTower", "DemoCacheTower\DemoCacheTower.csproj", "{2691D51E-3FE6-43C6-B962-9B9CCDDBB3FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2691D51E-3FE6-43C6-B962-9B9CCDDBB3FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2691D51E-3FE6-43C6-B962-9B9CCDDBB3FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2691D51E-3FE6-43C6-B962-9B9CCDDBB3FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2691D51E-3FE6-43C6-B962-9B9CCDDBB3FD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FE56594A-5A9B-4FAF-82DE-DD4BE9A7B235}
+	EndGlobalSection
+EndGlobal
