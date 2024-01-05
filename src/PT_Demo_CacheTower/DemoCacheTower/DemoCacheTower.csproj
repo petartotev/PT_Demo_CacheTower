@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="CacheTower" Version="0.14.0" />
     <PackageReference Include="CacheTower.Providers.Redis" Version="0.14.0" />
+    <PackageReference Include="CacheTower.Serializers.NewtonsoftJson" Version="0.14.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 

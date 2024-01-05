@@ -6,6 +6,7 @@
 - [Prerequisites](#prerequisites)
 - [CacheTower](#cachetower)
     - [MemoryCache](#memorycache)
+    - [File-based Caching](#file-based-caching)
 - [Links](#links)
 
 ## Prerequisites
@@ -60,7 +61,9 @@ public class UserContext
 
 ### MemoryCache
 
-5. AddCacheStack in `Program.cs`:
+0. Do steps from [Prerequisites](#prerequisites) section.
+
+1. AddCacheStack in `Program.cs`:
 
 ```
             builder.Services.AddCacheStack<UserContext>((provider, builder) => builder
@@ -69,43 +72,105 @@ public class UserContext
                 .WithCleanupFrequency(TimeSpan.FromMinutes(5)));
 ```
 
-6. Create new CacheTowerController.cs:
+2. Create new CacheTowerController.cs:
 
 ```
-using CacheTower;
 using DemoCacheTower.Models;
-using Microsoft.AspNetCore.Mvc;
 
-namespace DemoCacheTower.Controllers
+namespace DemoCacheTower;
+
+public class Program
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class CacheTowerController : ControllerBase
+    public static void Main(string[] args)
     {
-        private readonly ILogger<CacheTowerController> _logger;
-        private readonly ICacheStack<UserContext> _cacheStack;
+        var builder = WebApplication.CreateBuilder(args);
 
-        public CacheTowerController(
-            ILogger<CacheTowerController> logger,
-            ICacheStack<UserContext> cacheStack)
+        builder.Services.AddSingleton<UserContext>();
+
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        // =============== 1) MemoryCache ===============
+        builder.Services.AddCacheStack<UserContext>((provider, builder) => builder
+            .AddMemoryCacheLayer()
+            .WithCleanupFrequency(TimeSpan.FromMinutes(5)));
+
+        var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
         {
-            _logger = logger;
-            _cacheStack = cacheStack;
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
 
-        [HttpGet("MemoryCache/{id}")]
-        public async Task<IActionResult> GetAsync(int id)
-        {
-            var result = await _cacheStack.GetOrSetAsync<UserProfile>($"user-{id}", async (old, context) =>
-            {
-                return await context.GetUserForIdAsync(id);
-            }, new CacheSettings(TimeSpan.FromDays(1), TimeSpan.FromMinutes(60)));
-
-            return Ok(result);
-        }
+        app.UseHttpsRedirection();
+        app.UseAuthorization();
+        app.MapControllers();
+        app.Run();
     }
 }
 ```
+
+3. Test
+
+### File-based Caching
+
+*Provides a basic file-based caching solution using your choice of serializer. It stores each serialized cache item into its own file and uses a singular manifest file to track the status of the cache.*
+
+![FileCache](./res/cachetower_filecache_01.png)
+
+0. Do steps from [MemoryCache](#memorycache) section.
+
+1. Install Serializer:
+
+```
+Install-Package CacheTower.Serializers.NewtonsoftJson
+```
+
+2. Update CacheTowerController.cs as follows:
+
+```
+using CacheTower.Providers.FileSystem;
+using CacheTower.Serializers.NewtonsoftJson;
+using DemoCacheTower.Models;
+
+namespace DemoCacheTower;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddSingleton<UserContext>();
+
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        // =============== 2) FileCache ===============
+        builder.Services.AddCacheStack<UserContext>((provider, builder) => builder
+            .AddFileCacheLayer(new FileCacheLayerOptions("~/", NewtonsoftJsonCacheSerializer.Instance))
+            .WithCleanupFrequency(TimeSpan.FromMinutes(5)));
+
+        var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseAuthorization();
+        app.MapControllers();
+        app.Run();
+    }
+}
+```
+
+3. Test
 
 ## Links
 - https://github.com/TurnerSoftware/CacheTower
