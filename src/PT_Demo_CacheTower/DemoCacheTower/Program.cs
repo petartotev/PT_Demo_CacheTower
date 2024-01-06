@@ -4,6 +4,7 @@ using CacheTower.Serializers.NewtonsoftJson;
 using CacheTower.Serializers.Protobuf;
 using DemoCacheTower.Models;
 using ProtoBuf.Meta;
+using StackExchange.Redis;
 
 namespace DemoCacheTower;
 
@@ -27,15 +28,16 @@ public class Program
         //    .WithCleanupFrequency(TimeSpan.FromMinutes(5)));
 
         // =============== 2) FileCache ===============
-        builder.Services.AddCacheStack<UserContext>((provider, builder) => builder
-            .AddFileCacheLayer(new FileCacheLayerOptions("~/", NewtonsoftJsonCacheSerializer.Instance))
-            .WithCleanupFrequency(TimeSpan.FromMinutes(5)));
+        //builder.Services.AddCacheStack<UserContext>((provider, builder) => builder
+        //    .AddFileCacheLayer(new FileCacheLayerOptions("~/", NewtonsoftJsonCacheSerializer.Instance))
+        //    .WithCleanupFrequency(TimeSpan.FromMinutes(5)));
 
         // =============== 3) RedisCache ===============
-        //builder.Services.AddCacheStack<UserContext>((provider, builder) => builder
-        //    .AddMemoryCacheLayer()
-        //    //.AddRedisCacheLayer(/* Your Redis Connection */, new RedisCacheLayerOptions(ProtobufCacheSerializer.Instance))
-        //    .WithCleanupFrequency(TimeSpan.FromMinutes(5)));
+        builder.Services.AddCacheStack<UserContext>((provider, builder) => builder
+            .AddRedisCacheLayer(
+                ConnectionMultiplexer.Connect("127.0.0.1:6379"),
+                new RedisCacheLayerOptions(ProtobufCacheSerializer.Instance))
+            .WithCleanupFrequency(TimeSpan.FromMinutes(5)));
 
         var app = builder.Build();
 
