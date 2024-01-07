@@ -8,6 +8,7 @@
     - [In-memory Caching](#in-memory-caching)
     - [File-based Caching](#file-based-caching)
     - [Redis Caching](#redis-caching)
+    - [Database Caching](#database-caching)
 - [Links](#links)
 
 ## Prerequisites
@@ -183,7 +184,7 @@ public class Program
 
 0. Do steps from [MemoryCache](#memorycache) section.
 
-1. Pull the Redis image and run Redis in a Docker container:
+1. Pull Redis Docker Image and run Redis in a Docker Container:
 
 ```
 docker pull redis
@@ -255,7 +256,7 @@ public class Program
 4. Test by calling this endpoint:
 
 ```
-[GET] http://localhost:5001/CacheTower/MemoryCache/333
+[GET] http://localhost:5001/CacheTower/GetOrSet/333
 ```
 
 Output:
@@ -272,6 +273,79 @@ Next, you can try to get the value using the `redis-cli` command prompt ((see st
 Output:
 ```
 "\n\b\b\xb8\xd4\xd4\xd9\x0c\x10\x03\x12\x1e\b\xde\x01\x12\x0cusername-222\x1a\x0b\b\x80\xb1\x8a\xa9\xf0\xb2\xc7<\x10\x05"
+```
+
+### Database Caching
+
+0. Do steps from [MemoryCache](#memorycache) section.
+
+1. Pull MongoDB Docker Image and run MongoDB in a Docker Container:
+
+```
+docker pull mongo:latest
+docker run --name mongodb -p 27017:27017 -d mongo:latest
+```
+
+2. Install NuGet package `CacheTower.Providers.Database.MongoDB`:
+
+```
+Install-Package CacheTower.Providers.Database.MongoDB
+```
+
+3. Update `CacheTowerController.cs` as follows:
+
+```
+using DemoCacheTower.Models;
+using MongoFramework;
+
+namespace DemoCacheTower;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddSingleton<UserContext>();
+
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        // =============== 4) MongoDbCache ===============
+        builder.Services.AddCacheStack<UserContext>((provider, builder) => builder
+            .AddMongoDbCacheLayer(MongoDbConnection.FromConnectionString("mongodb://localhost:27017/TestDb"))
+            .WithCleanupFrequency(TimeSpan.FromMinutes(5)));
+
+        var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseAuthorization();
+        app.MapControllers();
+        app.Run();
+    }
+}
+```
+
+4. Test by calling the following endpoint:
+
+```
+[GET] http://localhost:5001/CacheTower/GetOrSet/333
+```
+
+Output:
+```
+{
+  "userId": 999,
+  "userName": "username-999",
+  "dateCreatedOrUpdated": "2024-01-06T14:57:53.0853318+02:00"
+}
 ```
 
 ## Links

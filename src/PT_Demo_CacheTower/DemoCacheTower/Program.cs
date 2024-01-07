@@ -3,6 +3,8 @@ using CacheTower.Providers.Redis;
 using CacheTower.Serializers.NewtonsoftJson;
 using CacheTower.Serializers.Protobuf;
 using DemoCacheTower.Models;
+using MongoDB.Driver;
+using MongoFramework;
 using ProtoBuf.Meta;
 using StackExchange.Redis;
 
@@ -33,10 +35,15 @@ public class Program
         //    .WithCleanupFrequency(TimeSpan.FromMinutes(5)));
 
         // =============== 3) RedisCache ===============
+        //builder.Services.AddCacheStack<UserContext>((provider, builder) => builder
+        //    .AddRedisCacheLayer(
+        //        ConnectionMultiplexer.Connect("127.0.0.1:6379"),
+        //        new RedisCacheLayerOptions(ProtobufCacheSerializer.Instance))
+        //    .WithCleanupFrequency(TimeSpan.FromMinutes(5)));
+
+        // =============== 4) MongoDbCache ===============
         builder.Services.AddCacheStack<UserContext>((provider, builder) => builder
-            .AddRedisCacheLayer(
-                ConnectionMultiplexer.Connect("127.0.0.1:6379"),
-                new RedisCacheLayerOptions(ProtobufCacheSerializer.Instance))
+            .AddMongoDbCacheLayer(MongoDbConnection.FromConnectionString("mongodb://localhost:27017/TestDb"))
             .WithCleanupFrequency(TimeSpan.FromMinutes(5)));
 
         var app = builder.Build();

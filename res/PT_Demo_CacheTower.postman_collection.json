@@ -7,18 +7,18 @@
 	},
 	"item": [
 		{
-			"name": "MemoryCache",
+			"name": "GetOrSet",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url-http-app}}/CacheTower/MemoryCache/333",
+					"raw": "{{url-http-app}}/CacheTower/GetOrSet/333",
 					"host": [
 						"{{url-http-app}}"
 					],
 					"path": [
 						"CacheTower",
-						"MemoryCache",
+						"GetOrSet",
 						"333"
 					]
 				}
@@ -30,14 +30,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url-http-app}}/CacheTower/MemoryCache/123",
+							"raw": "{{url-http-app}}/CacheTower/GetOrSet/333",
 							"host": [
 								"{{url-http-app}}"
 							],
 							"path": [
 								"CacheTower",
-								"MemoryCache",
-								"123"
+								"GetOrSet",
+								"333"
 							]
 						}
 					},
@@ -51,7 +51,7 @@
 						},
 						{
 							"key": "Date",
-							"value": "Thu, 04 Jan 2024 20:37:32 GMT"
+							"value": "Sat, 06 Jan 2024 13:02:34 GMT"
 						},
 						{
 							"key": "Server",
@@ -63,7 +63,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"userId\": 123,\n    \"userName\": \"username-123\",\n    \"dateCreatedOrUpdated\": \"2024-01-04T22:37:32.7546807+02:00\"\n}"
+					"body": "{\n    \"userId\": 333,\n    \"userName\": \"username-333\",\n    \"dateCreatedOrUpdated\": \"2024-01-06T13:02:00.663Z\"\n}"
 				}
 			]
 		}

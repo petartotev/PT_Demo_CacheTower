@@ -19,7 +19,7 @@ namespace DemoCacheTower.Controllers
             _cacheStack = cacheStack;
         }
 
-        [HttpGet("MemoryCache/{id}")]
+        [HttpGet("GetOrSet/{id}")]
         public async Task<IActionResult> GetAsync(int id)
         {
             var result = await _cacheStack.GetOrSetAsync<UserProfile>($"user-{id}", async (old, context) =>
@@ -29,17 +29,5 @@ namespace DemoCacheTower.Controllers
 
             return Ok(result);
         }
-
-        //[HttpGet(Name = "GetWeatherForecast")]
-        //public IEnumerable<WeatherForecast> Get()
-        //{
-        //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //    {
-        //        Date = DateTime.Now.AddDays(index),
-        //        TemperatureC = Random.Shared.Next(-20, 55),
-        //        Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        //    })
-        //    .ToArray();
-        //}
     }
 }
